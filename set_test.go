@@ -4,7 +4,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/judah-caruso/base"
+	"github.com/judah-caruso/base.go"
 )
 
 type Flag uint8

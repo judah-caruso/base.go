@@ -3,7 +3,7 @@ package base_test
 import (
 	"testing"
 
-	"github.com/judah-caruso/base"
+	"github.com/judah-caruso/base.go"
 )
 
 func TestStaticArray(t *testing.T) {
