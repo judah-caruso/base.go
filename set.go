@@ -3,7 +3,7 @@
 
 A simple type that allows bitset-like functionality.
 */
-package base
+package core
 
 import (
 	"math/bits"

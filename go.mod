@@ -1,3 +1,3 @@
-module github.com/judah-caruso/base.go
+module github.com/judah-caruso/core
 
 go 1.20

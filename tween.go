@@ -3,7 +3,7 @@
 
 Immediate mode tweening.
 */
-package base
+package core
 
 import (
 	"encoding/binary"

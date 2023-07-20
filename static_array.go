@@ -3,7 +3,7 @@
 
 A simple fixed-size array. Not super useful yet.
 */
-package base
+package core
 
 type StaticArray[T any] struct {
 	items []T

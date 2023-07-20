@@ -1,13 +1,13 @@
-package base_test
+package core_test
 
 import (
 	"testing"
 
-	"github.com/judah-caruso/base.go"
+	"github.com/judah-caruso/core"
 )
 
 func TestStaticArray(t *testing.T) {
-	arr := base.NewStaticArray[int](8)
+	arr := core.NewStaticArray[int](8)
 
 	arr.Append(10)
 	arr.Append(20)

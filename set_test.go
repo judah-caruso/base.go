@@ -1,10 +1,10 @@
-package base_test
+package core_test
 
 import (
 	"testing"
 	"unsafe"
 
-	"github.com/judah-caruso/base.go"
+	"github.com/judah-caruso/core"
 )
 
 type Flag uint8
@@ -16,10 +16,10 @@ const (
 	FlagC
 )
 
-type FlagSet = base.Set[Flag]
+type FlagSet = core.Set[Flag]
 
 func TestSet(t *testing.T) {
-	set := base.NewSet[Flag]() // less preferred
+	set := core.NewSet[Flag]() // less preferred
 	set = FlagSet{}            // equivalent, but preferred
 
 	size := unsafe.Sizeof(set)
@@ -75,7 +75,7 @@ func TestSet(t *testing.T) {
 		t.Error("invalid set value")
 	}
 
-	set = base.NewSetFrom(v)
+	set = core.NewSetFrom(v)
 	if set.TotalSet() != 2 {
 		t.Error("invalid number of set values")
 	}
