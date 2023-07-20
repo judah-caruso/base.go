@@ -3,7 +3,7 @@
 
 Immediate mode tweening.
 */
-package core
+package tween
 
 import (
 	"encoding/binary"
@@ -36,7 +36,7 @@ const (
 	TransInOut
 )
 
-type TweenOpts struct {
+type Opts struct {
 	Ease       Ease
 	Transition Transition
 	Duration   time.Duration
@@ -44,7 +44,7 @@ type TweenOpts struct {
 }
 
 type Tween struct {
-	TweenOpts
+	Opts
 	hash     uint
 	rate     float64
 	progress float64
@@ -59,7 +59,7 @@ type value struct {
 	value *float64
 }
 
-func TweenValue(dt float64, from *float64, to float64, opts *TweenOpts) (done bool, tween *Tween) {
+func TweenValue(dt float64, from *float64, to float64, opts *Opts) (done bool, tween *Tween) {
 	if opts == nil {
 		opts = defaultOpts
 	}
@@ -119,12 +119,12 @@ func (t *Tween) Reverse() {
 func (t *Tween) Reset() {
 	durInSec := t.Duration.Seconds()
 	if durInSec > 0 {
-		t.rate = durInSec
+		t.rate = 1 / durInSec
 	}
 
 	delayInSec := t.Delay.Seconds()
 	if delayInSec > 0 {
-		t.delay = delayInSec
+		t.delay = 1 / delayInSec
 	}
 
 	t.progress = 0
@@ -164,23 +164,23 @@ func (t *Tween) step() float64 {
 func applyEase(p float64, ease Ease) float64 {
 	switch ease {
 	case EaseQuad:
-		p = p * p
+		return p * p
 	case EaseCubic:
-		p = p * p * p
+		return p * p * p
 	case EaseQuart:
-		p = p * p * p * p
+		return p * p * p * p
 	case EaseQuint:
-		p = p * p * p * p * p
+		return p * p * p * p * p
 	case EaseExpo:
-		p = math.Pow(2, 10*(p-1))
+		return math.Pow(2, 10*(p-1))
 	case EaseSine:
-		p = -math.Cos(p*(math.Pi*0.5)) + 1
+		return -math.Cos(p*(math.Pi*0.5)) + 1
 	case EaseCirc:
-		p = -(math.Sqrt(1-(p*p)) - 1)
+		return -(math.Sqrt(1-(p*p)) - 1)
 	case EaseBack:
-		p = p * p * (2.7*p - 1.7)
+		return p * p * (2.7*p - 1.7)
 	case EaseElastic:
-		p = -math.Pow(2, 10*p-10) * math.Sin((p*10-10.75)*((2*math.Pi)/3))
+		return -math.Pow(2, 10*p-10) * math.Sin((p*10-10.75)*((2*math.Pi)/3))
 	}
 
 	// Also handles EaseLinear
@@ -199,7 +199,7 @@ func (t *Tween) addValue(from *float64, to float64) {
 	}
 }
 
-func findOrCreateTween(hash uint, opts *TweenOpts) *Tween {
+func findOrCreateTween(hash uint, opts *Opts) *Tween {
 	tween, ok := managedTweens[hash]
 	if !ok {
 		if opts == nil {
@@ -213,22 +213,22 @@ func findOrCreateTween(hash uint, opts *TweenOpts) *Tween {
 
 		durInSec := opts.Duration.Seconds()
 		if durInSec > 0 {
-			rate = durInSec
+			rate = 1 / durInSec
 		}
 
 		delayInSec := opts.Delay.Seconds()
 		if delayInSec > 0 {
-			delay = delayInSec
+			delay = 1 / delayInSec
 		}
 
 		tween = new(Tween)
 		*tween = Tween{
-			TweenOpts: *opts,
-			hash:      hash,
-			rate:      rate,
-			delay:     delay,
-			progress:  0,
-			values:    make([]value, 0),
+			Opts:     *opts,
+			hash:     hash,
+			rate:     rate,
+			delay:    delay,
+			progress: 0,
+			values:   make([]value, 0),
 		}
 
 		managedTweens[hash] = tween
@@ -239,7 +239,7 @@ func findOrCreateTween(hash uint, opts *TweenOpts) *Tween {
 
 var (
 	managedTweens = make(map[uint]*Tween)
-	defaultOpts   = &TweenOpts{
+	defaultOpts   = &Opts{
 		Ease:       EaseQuart,
 		Transition: TransInOut,
 		Duration:   time.Second * 3,
